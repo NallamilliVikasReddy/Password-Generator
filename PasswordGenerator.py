@@ -1,38 +1,27 @@
+import tkinter as tk
 import random
 import string
 
-def generate_password(length, use_uppercase, use_lowercase, use_numbers, use_special_chars):
-    character_sets = {
-        'uppercase': string.ascii_uppercase if use_uppercase else '',
-        'lowercase': string.ascii_lowercase if use_lowercase else '',
-        'numbers': string.digits if use_numbers else '',
-        'special_chars': string.punctuation if use_special_chars else ''
-    }
-
-    selected_characters = ''.join(character_sets.values())
-    
-    if not selected_characters:
-        print("Please choose at least one character set.")
+def generate_password():
+    password_length = int(length_entry.get())
+    if password_length < 6:
+        result_label.config(text="Password length must be at least 6 characters")
         return
+    password = ''.join(random.choices(string.ascii_letters + string.digits + string.punctuation, k=password_length))
+    result_label.config(text="Generated Password: " + password)
 
-    password = ''.join(random.choice(selected_characters) for _ in range(length))
-    return password
+root = tk.Tk()
+root.title("Password Generator")
 
-def main():
-    print("Password Generator Tool")
+length_label = tk.Label(root, text="Enter Password Length:")
+length_label.grid(row=0, column=0, padx=10, pady=10)
+length_entry = tk.Entry(root)
+length_entry.grid(row=0, column=1, padx=10, pady=10)
 
-    length = int(input("Enter the desired password length: "))
-    use_uppercase = input("Include uppercase letters? (y/n): ").lower() == 'y'
-    use_lowercase = input("Include lowercase letters? (y/n): ").lower() == 'y'
-    use_numbers = input("Include numbers? (y/n): ").lower() == 'y'
-    use_special_chars = input("Include special characters? (y/n): ").lower() == 'y'
+generate_button = tk.Button(root, text="Generate Password", command=generate_password)
+generate_button.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
 
-    password = generate_password(length, use_uppercase, use_lowercase, use_numbers, use_special_chars)
+result_label = tk.Label(root, text="")
+result_label.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
-    if password:
-        print("Generated Password:", password)
-    else:
-        print("Password generation failed. Please try again.")
-
-if __name__ == "__main__":
-    main()
+root.mainloop()
